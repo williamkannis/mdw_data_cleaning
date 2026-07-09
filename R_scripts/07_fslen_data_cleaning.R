@@ -27,9 +27,9 @@ clean_dir <- "cleaned_data"
 trait_dir <-"trait_data"
 
 # Data (make sure is most up to date!)
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-02-24.rds"))
-phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-02-25.rds"))  
-max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-02-24.rds"))
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
+phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-07-09.rds"))  
+max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-07-09.rds"))
 
 ### Remove Incomplete or issued samples  #######################################
 
@@ -353,7 +353,7 @@ len_df_wy <- len_df_rmlen %>%
   ) 
   
 
-### Final formatting  ###########################################################
+### Final formatting  ##########################################################
 
 # Consolidate date columns into one date column and retain only useful columns
 len_df_for <- len_df_wy %>% 

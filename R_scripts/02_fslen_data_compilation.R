@@ -38,7 +38,7 @@ srs_format <-len_srs %>%
   mutate(site = as.character(site)) %>% 
   
   # fix 1998 period 5 issue. Create column to retain sample year to aid in the 
-  # estimation of sample interals, but fix year for correct grouping
+  # estimation of sample intervals, but fix year for correct grouping
   mutate(year_date = year,
          year = case_when(
             year == 1998 & period == 5 & month==1 ~ 1997,
@@ -73,8 +73,16 @@ ts_wca_format <- len_ts_wca %>%
   # Format column names
   clean_names() %>% 
   
-  # TSL plots D and E can be treated as their own sites
+  
   mutate(
+    # Fix WCA CUM 125 Jan problem. Retain year 2020 for organization, but
+    # change year_date to 2021 for sample interval estimation
+    year_date = case_when(
+      cum == 125 & year == 2020 & month == 1 ~ 2021,
+      T ~ year
+    ),
+    
+    # TSL plots D and E can be treated as their own sites
     site = case_when(
       region == "TSL" & plot %in% c("D","E") ~ paste0(site,"sh"),
       T ~ site

@@ -87,6 +87,7 @@ phy_ts_wca %>%
     site %in% sapply(5:8,function(x) paste0("0",x))
     )
 # This is okay, because they are actually consequative dates 12-28 to 1-6
+# collection date for sample intervals was corrected to 2021 in lenght data.
 # No issues with wca only SRS 1998
 
 

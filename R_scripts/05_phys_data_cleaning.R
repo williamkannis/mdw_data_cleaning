@@ -11,9 +11,9 @@
 # DESCRIPTION: Prepares physical site data by correcting issues identified in
 # compiled data exploration scripts. Returns a data set that is ready to pair
 # with fish length data set to filter out "unsampleable" conditions and to be
-# as explanatory variables in analysis. Each data cleaning step has justification
-# given for that cleaning step. Script ends with a function to check that all 
-# issues are addressed properly before exporting.
+# as explanatory variables in analysis. Each data cleaning step has 
+# justification given for that cleaning step. Script ends with a function to 
+# check that all issues are addressed properly before exporting.
 
 
 ### House keeping  #############################################################
@@ -28,8 +28,8 @@ raw_dir <- "raw_data"
 clean_dir <- "cleaned_data"
 
 # Data (make sure is most up to date!)
-phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-02-24.rds")) 
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-02-24.rds"))
+phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-07-09.rds")) 
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
 
 
 ### Fix duplication issue  #####################################################

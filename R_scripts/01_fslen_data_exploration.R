@@ -91,6 +91,56 @@ sapply(data_list,function (x) x %>%
 # multiple plots are sampled over multiple days and this is normal according to
 # protocol
 
+### CHeck that periods are not split among differnt parts of year ###
+# (e.g., period 5 was measured in novmener and march). THis would indicate an
+# error in period or date
+
+lapply(data_list,function(x) x %>% 
+         clean_names() %>% 
+         group_by(year,period,site) %>% 
+         summarise(
+           n_mon = n_distinct(month),
+           mon = paste(unique(month),collapse = ",")
+         ) %>%
+         filter(n_mon > 1))
+
+lapply(data_list,function(x) x %>% 
+         clean_names() %>% 
+         group_by(year,period,site) %>% 
+         summarise(
+           n_mon = n_distinct(month),
+           mon = unique(month)
+         ) %>%
+         filter(n_mon > 1) %>% 
+         arrange(year,period,site,mon) %>% 
+         group_by(year,period,site) %>% 
+         mutate(dif = lead(mon)-mon) %>% 
+         filter(dif > 1))
+# only an issue in 1998 srs, Joel said this is a mistake that needs to be 
+# corrected with 1998 period 5 measurements taken in Jan belongin to 1997
+
+
+### Do period samples exist in the following year  ###
+lapply(data_list[-c(2:3)],function (x) x %>% 
+         filter(
+           period == 5,
+           month %in% 1:5
+         ) %>% 
+         distinct(region,site,year,cum,period,month,day)
+       )
+lapply(data_list[c(2:3)],function (x) x %>% 
+         filter(
+           period == 5,
+           month %in% 1:5
+         ) %>% 
+         distinct(region,site,year,period,month,day)
+)
+# in srs, this is only an issue for teh 1998 period 5 issue, these will
+# need to have year changed to 1997, with sample year of 1998 for actual date,
+#In wca, this s an issue for cum 125 of 2020. Opposite problem, year is okay
+# for data organization, but needs to be changed for sampling date
+
+
 
 ### Are site names distinct among regions  ###
 bind_rows(lapply(data_list,function(x) x %>%
@@ -194,6 +244,10 @@ lapply(
 # DONE - remove plots D and E from srs
 # DONE - fix 1998 period 5 problem in srs length data
 # DONE - fix 1998 period 5 problem in srs phy data
+# DONE - fix 2020 CUM 125 problem in wca length data
+# DONE - check for 2020 CUM 125 problem in wca phy data
+#         - NOTE: this becomes a different resoved issue, where these were 
+#           assigned the wrong CUM in phy data. This issue is resolved
 # DONE - fix comment column names srs 12-20
 # DONE - add cum column to srs12 and 20
 # DONE - remove "entered_by" "checked_by" "sorted_by" from srs12-20

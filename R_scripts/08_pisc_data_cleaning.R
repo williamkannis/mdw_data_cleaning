@@ -25,8 +25,8 @@ clean_dir <- "cleaned_data"
 
 # Data (make sure is most up to date!)
 pis_df <- read.csv(file.path(raw_dir,"pisc_index.csv"))
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-02-24.rds"))
-phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-02-25.rds"))  
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
+phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-07-09.rds"))  
 
 
 ### Explore data for any issues  ###############################################

@@ -33,9 +33,9 @@ q_dir <- "question_data"
 trait_dir <- "trait_data"
 
 # Data (make sure is most up to date!)
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-02-24.rds"))
-phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-02-24.rds"))
-max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-02-24.rds"))
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
+phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-07-09.rds"))
+max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-07-09.rds"))
 
 
 ### Compiled length data  ######################################################
@@ -119,6 +119,11 @@ phy_df %>%
          cum == 120)
 
 # check length data to see if issue exist here
+len_df %>% 
+  arrange(cum) %>% 
+  distinct(cum,year,period) %>% 
+  group_by(cum) %>% 
+  filter(n()>1)
 len_df %>% 
   filter(region =="WCA",
          year == 2020,
@@ -244,7 +249,7 @@ phy_df2 %>%
 phy_df2 %>% 
   anti_join(len_df,join_by(year,period,site,plot,throw)) %>% 
   nrow()
-# There are over 1982 extra throws in phys data. COnsistent among year and cum groupings
+# There are over 1982 extra throws in phys data. Consistent among year and cum groupings
 # Find out what regions these are from
 phy_df2 %>% 
   anti_join(len_df,join_by(cum,site,plot,throw)) %>% 
