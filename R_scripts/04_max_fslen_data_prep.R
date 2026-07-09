@@ -9,8 +9,9 @@
 # CREATED: 02/24/2026
 
 # DESCRIPTION: Creates a data frame with maximum lengths of each species in the 
-# data set to check if any erroneously large measurements are present in the data.
-# Fish lengths are aquired from the Fish Morph data set and formatted to match our data structure
+# data set to check if any erroneously large measurements are present in the 
+# data. Fish lengths are acquired from the Fish Morph data set and formatted to 
+# match our data structure
 
 
 ### House keeping  #############################################################
@@ -49,7 +50,8 @@ dataset_sp <-len_df %>%
 dataset_sp[!dataset_sp %in% sp_code_for$species]
 
 
-# Create rows in species code for non included species and filter out species not in dataset
+# Create rows in species code for non included species and filter out species 
+# not in dataset
 extra_sp_df <- data.frame(species = c("AMESPP", "ATHSPP", "CENSPP", "FUNSPP"))
 sp_code_all <- sp_code_for %>% 
   full_join(extra_sp_df) %>% 
@@ -58,7 +60,7 @@ sp_code_all <- sp_code_for %>%
   mutate(
     scientific_name = case_when(
       species == "AMESPP"~"Ameiurus spp",
-      species == "ATHSPP" ~ "Ath spp",
+      species == "ATHSPP" ~ "Atherinopsidae spp",
       species == "CENSPP" ~ "Centropomus spp",
       species == "FUNSPP" ~ "Fundulus spp",
       T~scientific_name
@@ -79,24 +81,31 @@ morph_for <- morph_df %>%
   select(family,genus,scientific_name,max_len)
   
 # which of out species are not in trait data
-sp_code_all$scientific_name[!sp_code_all$scientific_name %in% morph_for$scientific_name]
+sp_code_all$scientific_name[!sp_code_all$scientific_name %in% 
+                              morph_for$scientific_name]
 
 
 ### Harmonize scientific names  ################################################
 
 # check if all species names are up to date and correct. 
 # Has limit of 50 species at onece
-sp_names_harm1 <- taxize::gna_verifier(sp_code_all$scientific_name[1:50], 
-                                      data_source_ids = 3, 
-                                      canonical =  TRUE)
-sp_names_harm2 <- taxize::gna_verifier(sp_code_all$scientific_name[51:nrow(sp_code_all)], 
-                                       data_source_ids = 3, 
-                                       canonical =  TRUE)
+sp_names_harm1 <- taxize::gna_verifier(
+  sp_code_all$scientific_name[1:50], 
+  data_source_ids = 3, 
+  canonical =  TRUE
+  )
+sp_names_harm2 <- taxize::gna_verifier(
+  sp_code_all$scientific_name[51:nrow(sp_code_all)], 
+  data_source_ids = 3, 
+  canonical =  TRUE
+  )
 
 # Create data frame with current and updated species names
 sp_harm <-bind_rows(sp_names_harm1,sp_names_harm2) %>% 
-  rename(scientific_name = submittedName,
-         updated_name = currentCanonicalFull) %>% 
+  rename(
+    scientific_name = submittedName,
+    updated_name = currentCanonicalFull
+    ) %>% 
   select(scientific_name,updated_name)
 
 
@@ -114,7 +123,8 @@ sp_code_harm <- sp_code_all %>%
   )
 
 # check if updated names match traits
-sp_code_harm$updated_name[!sp_code_harm$updated_name %in% morph_for$scientific_name]
+sp_code_harm$updated_name[!sp_code_harm$updated_name %in% 
+                            morph_for$scientific_name]
 # almost all species are included now
 
 
@@ -122,14 +132,16 @@ sp_code_harm$updated_name[!sp_code_harm$updated_name %in% morph_for$scientific_n
 
 # genus level id
 morph_genus <- morph_for %>% 
-  filter(genus %in% c("Esox","Lepomis","Ameiurus","Centropomus","Fundulus")) %>% 
+  filter(
+    genus %in% c("Esox","Lepomis","Ameiurus","Centropomus","Fundulus")
+    ) %>% 
   group_by(genus) %>% 
   summarise(max_len = max(max_len, na.rn=T)) %>% 
   rename(updated_name = genus)
 
 # family level id
 morph_fam <- morph_for %>% 
-  filter(family == "Cichlidae",
+  filter(family %in% c("Cichlidae","Atherinopsidae"),
          !is.na(max_len)) %>% 
   group_by(family) %>% 
   summarise(max_len = max(max_len, na.rn=T)) %>% 
@@ -153,9 +165,6 @@ sp_lengths_df <- sp_code_harm %>%
   ) %>% 
   select(species,max_len)
 
-## WHAY IS ATHSPP??
-
-
 
 ### Final check  ###############################################################
 summary(sp_lengths_df)
@@ -168,5 +177,8 @@ sp_lengths_df %>% filter(is.na(max_len))
 
 
 ### Export  ####################################################################
-saveRDS(sp_lengths_df, file.path(trait_dir,paste0("fslen_max_length_",Sys.Date(),".rds")))
+saveRDS(
+  sp_lengths_df, 
+  file.path(trait_dir,paste0("fslen_max_length_",Sys.Date(),".rds"))
+  )
 
