@@ -69,9 +69,7 @@ len_df %>%
               ),
             join_by(site)) %>% 
   distinct(site)
-# expceted sites missing
-
-
+# expected sites missing. MD and TS need to be duplicated to sh sites
 
 # Are any site/years duplicated
 pis_df %>% 
@@ -89,6 +87,21 @@ pis_df %>%
 
 ###  Clean up data  ############################################################
 
+# TSL data are coarsened to site level, but does not include the sh divsions.
+
+# duplicate the TSL MD and TS into sh sites in hydro data
+name_ids <-phy_df %>% 
+  distinct(wateryear,region,site) %>% 
+  rename(site_full = site) %>% 
+  mutate(
+    site = case_when(
+      substr(site_full,1,2) == "MD" ~ "MD",
+      substr(site_full,1,2) == "TS" ~ "TS",
+      T~site_full
+    )
+  )
+
+
 # CLean name and format site names to match rest of data
 pis_df_clean <- pis_df %>% 
   clean_names() %>% 
@@ -97,7 +110,18 @@ pis_df_clean <- pis_df %>%
       region == "WCA" ~paste0("0",site),
       T~ site
     )
-  )
+  ) %>% 
+  rename(wateryear = year) %>% 
+  filter(region != "PHD") %>%  # REMOVE FOR NOW, BRING BACK IF YOU GET THESE DATA
+  inner_join(name_ids) %>% 
+  select(-site) %>% 
+  rename(site = site_full)
+
+
+# DId correct number of sites get removed/duplicated?
+-(pis_df %>% filter(REGION =="PHD") %>% nrow()) +
+  pis_df %>% filter(SITE %in% c("TS","MD")) %>% nrow() +
+  pis_df %>% nrow() == pis_df_clean %>% nrow()
 
 
 ### Export data  ###############################################################
