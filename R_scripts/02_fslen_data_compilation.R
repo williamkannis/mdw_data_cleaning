@@ -74,6 +74,10 @@ ts_wca_format <- len_ts_wca %>%
   clean_names() %>% 
   
   
+  # Remove site 11, monitoring was discontinued here in 2006 due to dense veg
+  # growth
+  filter(site != "11") %>% 
+  
   mutate(
     # Fix WCA CUM 125 Jan problem. Retain year 2020 for organization, but
     # change year_date to 2021 for sample interval estimation
@@ -146,7 +150,17 @@ len_df <- len_df %>%
 # final check
 colnames(len_df)
 summary(len_df)
-nrow(len_df) == sum(sapply(list(len_srs,len_srs_12,len_srs_20,len_ts_wca),nrow))
+nrow(len_df) == sum(
+  sapply(
+    list(
+      len_srs,
+      len_srs_12,
+      len_srs_20,
+      len_ts_wca %>% filter(SITE != "11")
+      ),
+    nrow
+    )
+  )
 len_df %>% 
   arrange(comment) %>% 
   distinct(comment) %>% 
