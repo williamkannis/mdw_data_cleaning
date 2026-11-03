@@ -118,7 +118,7 @@ pis_df_clean <- pis_df %>%
   rename(site = site_full)
 
 
-# DId correct number of sites get removed/duplicated?
+# Did correct number of sites get removed/duplicated?
 -(pis_df %>% filter(REGION =="PHD") %>% nrow()) +
   pis_df %>% filter(SITE %in% c("TS","MD")) %>% nrow() +
   pis_df %>% nrow() == pis_df_clean %>% nrow()
@@ -126,5 +126,11 @@ pis_df_clean <- pis_df %>%
 
 ### Export data  ###############################################################
 
-saveRDS(pis_df_clean,file.path(clean_dir,paste0("pisc_cleaned_",Sys.Date(),".rds")))
+saveRDS(
+  pis_df_clean,
+  file.path(
+    clean_dir,
+    paste0("pisc_cleaned_",Sys.Date(),".rds")
+    )
+  )
   
