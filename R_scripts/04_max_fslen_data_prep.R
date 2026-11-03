@@ -28,7 +28,7 @@ raw_dir <- "raw_data"
 trait_dir <-"trait_data"
 
 # Data (make sure is most up to date!)
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-02-24.rds"))
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-11-03.rds"))
 sp_code_df <- read.csv(file.path(raw_dir,"species_code.csv"))
 morph_df <- read.csv(file.path(trait_dir,"fishmorph_database.csv"))
 
@@ -80,7 +80,7 @@ morph_for <- morph_df %>%
   mutate(genus = word(scientific_name,1)) %>% 
   select(family,genus,scientific_name,max_len)
   
-# which of out species are not in trait data
+# which of our species are not in trait data
 sp_code_all$scientific_name[!sp_code_all$scientific_name %in% 
                               morph_for$scientific_name]
 

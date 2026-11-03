@@ -28,8 +28,8 @@ raw_dir <- "raw_data"
 clean_dir <- "cleaned_data"
 
 # Data (make sure is most up to date!)
-phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-07-09.rds")) 
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
+phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-11-03.rds")) 
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-11-03.rds"))
 
 
 ### Fix duplication issue  #####################################################

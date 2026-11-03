@@ -33,9 +33,9 @@ q_dir <- "question_data"
 trait_dir <- "trait_data"
 
 # Data (make sure is most up to date!)
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
-phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-07-09.rds"))
-max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-07-09.rds"))
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-11-03.rds"))
+phy_df <- readRDS(file.path(raw_dir,"phys_raw_compiled_2026-11-03.rds"))
+max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-11-03.rds"))
 
 
 ### Compiled length data  ######################################################
@@ -532,7 +532,7 @@ na_id <-combined_comments %>%
   distinct(year,cum,period,region,site,plot,throw)
 
 combined_comments %>% 
-  inner_join(id) %>% 
+  inner_join(na_id) %>% 
   group_by(year,cum,period,region,site,plot,throw) %>% 
   summarise(n = n()) %>% 
   filter(n > 1)
@@ -664,7 +664,7 @@ c %>%
 ### Maximum fish length exploration  ###########################################
 
 # Confusing species codes
-morph_df %>% 
+max_len_df %>% 
   filter(is.na(max_len))
 # ATHSPP and CENSPP are not in metadata and it is uncertain which genera these
 # refer to. CENSPP is likely Centropomus but need to be sure.

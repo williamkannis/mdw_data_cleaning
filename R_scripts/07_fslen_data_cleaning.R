@@ -27,9 +27,9 @@ clean_dir <- "cleaned_data"
 trait_dir <-"trait_data"
 
 # Data (make sure is most up to date!)
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
-phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-07-09.rds"))  
-max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-07-09.rds"))
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-11-03.rds"))
+phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-11-03.rds"))  
+max_len_df <- readRDS(file.path(trait_dir,"fslen_max_length_2026-11-03.rds"))
 
 ### Remove Incomplete or issued samples  #######################################
 

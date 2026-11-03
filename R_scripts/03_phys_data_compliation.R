@@ -25,7 +25,7 @@ raw_dir <- "raw_data"
 
 # Data
 phy_srs <- read.csv(file.path(raw_dir,"phys_1996_2024_p5_SRS.csv"))
-phy_ts_wca <- read.csv(file.path(raw_dir,"phys_WCA.TSL.csv"))
+phy_ts_wca <- read.csv(file.path(raw_dir,"phys_WCA.TSL_upd.csv"))
 
 
 ### Unmatched colnames  ########################################################
@@ -39,25 +39,28 @@ phy_ts_wca %>% group_by(TRLDRY,PHYS_TRLDRY) %>% summarise(n=n())
 phy_ts_wca %>% group_by(EMPCUP,PHYS_EMPCUP) %>% summarise(n=n())
 phy_ts_wca %>% group_by(NOSAMP,PHYS_NOSAMP) %>% summarise(n=n())
 phy_ts_wca %>% group_by(SITDEE,PHYS_SITDEE) %>% summarise(n=n())
-# All of these are binary with 1 or NA  and mostly overlap witht eh normal  
+# All of these are binary with 1 or NA  and mostly overlap with the normal  
 # column. There is no case of the extra column having a 1 and the normal column 
 # not. The maximum number of 1's is 50, but most have a few or none. This 
 # column can be ignored.
 
 ### Check for 1998 issue
-lapply(list(phy_srs,phy_ts_wca),function(x) x %>% 
-         clean_names() %>% 
-         group_by(year,period,site) %>% 
-         summarise(
-           n_mon = n_distinct(month),
-           mon = paste(unique(month),collapse = ",")
-           ) %>%
-         filter(n_mon > 1))
+lapply(list(phy_srs,phy_ts_wca),function(x) {
+  x %>% 
+    clean_names() %>% 
+    group_by(year,period,site) %>% 
+    summarise(
+      n_mon = n_distinct(month),
+      mon = paste(unique(month),collapse = ",")
+    ) %>%
+    as.data.frame() %>%
+    print(row.names = FALSE)
+})
 
 lapply(list(phy_srs,phy_ts_wca),function(x) x %>% 
          clean_names() %>% 
          group_by(year,period,site) %>% 
-         summarise(
+         reframe(
            n_mon = n_distinct(month),
            mon = unique(month)
            ) %>%
@@ -85,7 +88,8 @@ phy_ts_wca %>%
     year == 2020,
     period == 5,
     site %in% sapply(5:8,function(x) paste0("0",x))
-    )
+    ) %>% 
+  select(region,cum, year, period, site, date)
 # This is okay, because they are actually consequative dates 12-28 to 1-6
 # collection date for sample intervals was corrected to 2021 in lenght data.
 # No issues with wca only SRS 1998
