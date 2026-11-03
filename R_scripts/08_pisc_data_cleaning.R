@@ -25,8 +25,8 @@ clean_dir <- "cleaned_data"
 
 # Data (make sure is most up to date!)
 pis_df <- read.csv(file.path(raw_dir,"pisc_index.csv"))
-len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-07-09.rds"))
-phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-07-09.rds"))  
+len_df <- readRDS(file.path(raw_dir,"fslen_raw_compiled_2026-11-03.rds"))
+phy_df <- readRDS(file.path(clean_dir,"phys_cleaned_2026-11-03.rds"))  
 
 
 ### Explore data for any issues  ###############################################
@@ -87,22 +87,23 @@ pis_df %>%
 
 ###  Clean up data  ############################################################
 
-# TSL data are coarsened to site level, but does not include the sh divsions.
+# TSL data are coarsened to site level, but does not include the sh divisions.
 
-# duplicate the TSL MD and TS into sh sites in hydro data
-name_ids <-phy_df %>% 
-  distinct(wateryear,region,site) %>% 
-  rename(site_full = site) %>% 
-  mutate(
-    site = case_when(
-      substr(site_full,1,2) == "MD" ~ "MD",
-      substr(site_full,1,2) == "TS" ~ "TS",
-      T~site_full
-    )
-  )
+# # duplicate the TSL MD and TS into sh sites in hydro data MOVE THIS INTO 
+# ANALYSIS SPECIFIC CODE
+# name_ids <-phy_df %>% 
+#   distinct(wateryear,region,site) %>% 
+#   rename(site_full = site) %>% 
+#   mutate(
+#     site = case_when(
+#       substr(site_full,1,2) == "MD" ~ "MD",
+#       substr(site_full,1,2) == "TS" ~ "TS",
+#       T~site_full
+#     )
+#   )
 
 
-# CLean name and format site names to match rest of data
+# Clean name and format site names to match rest of data
 pis_df_clean <- pis_df %>% 
   clean_names() %>% 
   mutate(
@@ -111,17 +112,18 @@ pis_df_clean <- pis_df %>%
       T~ site
     )
   ) %>% 
-  rename(wateryear = year) %>% 
-  filter(region != "PHD") %>%  # REMOVE FOR NOW, BRING BACK IF YOU GET THESE DATA
-  inner_join(name_ids) %>% 
-  select(-site) %>% 
-  rename(site = site_full)
+  rename(wateryear = year) 
+  # inner_join(name_ids) %>%  # Move to analysis specific code
+  # select(-site) %>% 
+  # rename(site = site_full)
 
 
 # Did correct number of sites get removed/duplicated?
--(pis_df %>% filter(REGION =="PHD") %>% nrow()) +
-  pis_df %>% filter(SITE %in% c("TS","MD")) %>% nrow() +
-  pis_df %>% nrow() == pis_df_clean %>% nrow()
+# -(pis_df %>% filter(REGION =="PHD") %>% nrow()) +
+#   pis_df %>% filter(SITE %in% c("TS","MD")) %>% nrow() +
+#   pis_df %>% nrow() == pis_df_clean %>% nrow()
+
+# NO LONGER NEEDED
 
 
 ### Export data  ###############################################################
